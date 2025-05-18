@@ -1,5 +1,4 @@
 ﻿using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
 using TaskManagementAPI.DTOs.Auth;
 using TaskManagementAPI.Models;
@@ -23,8 +22,6 @@ namespace TaskManagementAPI.Services
 
         public async Task<TMUsers> Register(RegisterDto registerDto)
         {
-            //CreatePasswordHash(registerDto.Password, out byte[] passwordHash, out byte[] passwordSalt);
-
             var user = new TMUsers
             {
                 Username = registerDto.Username,
@@ -42,7 +39,7 @@ namespace TaskManagementAPI.Services
         {
             var user = await _context.TMUsers.FirstOrDefaultAsync(u => u.Username == loginDto.Username);
 
-            if (user == null) //|| !VerifyPasswordHash(loginDto.Password, user.Password))
+            if (user == null)
             {
                 return null;
             }
@@ -72,23 +69,5 @@ namespace TaskManagementAPI.Services
 
             return jwt;
         }
-
-        //private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
-        //{
-        //    using (var hmac = new HMACSHA512())
-        //    {
-        //        passwordSalt = hmac.Key;
-        //        passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-        //    }
-        //}
-
-        //private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
-        //{
-        //    using (var hmac = new HMACSHA512(passwordSalt))
-        //    {
-        //        var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-        //        return computedHash.SequenceEqual(passwordHash);
-        //    }
-        //}
     }
 }
